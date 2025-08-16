@@ -1,43 +1,36 @@
+type ShapeType = 'triangle' | 'circle' | 'rectangle';
+type ColorType = 'red' | 'green' | 'blue';
+
 export interface Figure {
-  shape: 'triangle' | 'circle' | 'rectangle';
-  color: 'red' | 'green' | 'blue';
+  shape: ShapeType;
+  color: ColorType;
   getArea(): number;
 }
 
-interface ArgsTriangle {
+export class Triangle implements Figure {
+  shape: ShapeType = 'triangle';
+
+  color: ColorType;
+
   a: number;
+
   b: number;
+
   c: number;
-}
 
-interface ArgsCircle {
-  radius: number;
-}
-
-interface ArgsRectangle {
-  width: number;
-  height: number;
-}
-
-export class Triangle implements Figure, ArgsTriangle {
-  public shape: 'triangle' = 'triangle';
-
-  constructor(
-    public color: 'red' | 'green' | 'blue',
-    public a: number,
-    public b: number,
-    public c: number,
-  ) {
+  constructor(color: ColorType, a: number, b: number, c: number) {
     if (a <= 0 || b <= 0 || c <= 0) {
-      throw new Error('Invalid triangle sides: triangle inequality violated');
+      throw new Error('All sides must be positive numbers.');
     }
 
-    const maxSide = Math.max(this.a, this.b, this.c);
-    const sumOthers = this.a + this.b + this.c - maxSide;
-
-    if (maxSide >= sumOthers) {
-      throw new Error('Invalid triangle sides: triangle inequality violated');
+    if (a + b <= c || a + c <= b || b + c <= a) {
+      throw new Error('These sides cannot form a triangle.');
     }
+
+    this.color = color;
+    this.a = a;
+    this.b = b;
+    this.c = c;
   }
 
   getArea(): number {
@@ -48,16 +41,20 @@ export class Triangle implements Figure, ArgsTriangle {
   }
 }
 
-export class Circle implements Figure, ArgsCircle {
-  public shape: 'circle' = 'circle';
+export class Circle implements Figure {
+  shape: ShapeType = 'circle';
 
-  constructor(
-    public color: 'red' | 'green' | 'blue',
-    public radius: number,
-  ) {
+  color: ColorType;
+
+  radius: number;
+
+  constructor(color: ColorType, radius: number) {
     if (radius <= 0) {
-      throw new Error('Error: incorrect circle value');
+      throw new Error('Radius must be a positive number.');
     }
+
+    this.color = color;
+    this.radius = radius;
   }
 
   getArea(): number {
@@ -67,17 +64,23 @@ export class Circle implements Figure, ArgsCircle {
   }
 }
 
-export class Rectangle implements Figure, ArgsRectangle {
-  public shape: 'rectangle' = 'rectangle';
+export class Rectangle implements Figure {
+  shape: ShapeType = 'rectangle';
 
-  constructor(
-    public color: 'red' | 'green' | 'blue',
-    public width: number,
-    public height: number,
-  ) {
+  color: ColorType;
+
+  width: number;
+
+  height: number;
+
+  constructor(color: ColorType, width: number, height: number) {
     if (width <= 0 || height <= 0) {
-      throw new Error('Error: incorrect rectangle value');
+      throw new Error('Width and height must be positive numbers.');
     }
+
+    this.color = color;
+    this.width = width;
+    this.height = height;
   }
 
   getArea(): number {
