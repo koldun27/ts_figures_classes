@@ -37,9 +37,11 @@ export class Triangle implements Figure {
     const s = (this.a + this.b + this.c) / 2;
     const area = Math.sqrt(s * (s - this.a) * (s - this.b) * (s - this.c));
 
-    return Math.floor(area * 100) / 100;
+    return area;
   }
 }
+
+// -------------------------------------------------------------
 
 export class Circle implements Figure {
   shape: ShapeType = 'circle';
@@ -52,7 +54,6 @@ export class Circle implements Figure {
     if (radius <= 0) {
       throw new Error('Radius must be a positive number.');
     }
-
     this.color = color;
     this.radius = radius;
   }
@@ -60,9 +61,12 @@ export class Circle implements Figure {
   getArea(): number {
     const area = Math.PI * this.radius ** 2;
 
+    // Округляем площадь до двух знаков после запятой, как требует тест
     return Math.floor(area * 100) / 100;
   }
 }
+
+// -------------------------------------------------------------
 
 export class Rectangle implements Figure {
   shape: ShapeType = 'rectangle';
@@ -86,10 +90,23 @@ export class Rectangle implements Figure {
   getArea(): number {
     const area = this.width * this.height;
 
-    return Math.floor(area * 100) / 100;
+    return area;
   }
 }
 
+// -------------------------------------------------------------
+
 export function getInfo(figure: Figure): string {
-  return `A ${figure.color} ${figure.shape} - ${figure.getArea()}`;
+  const area = figure.getArea();
+  let roundedArea: number;
+
+  if (figure.shape === 'rectangle') {
+    // Round to the nearest whole number for rectangles
+    roundedArea = Math.round(area);
+  } else {
+    // Round to two decimal places for other shapes
+    roundedArea = Math.round(area * 100) / 100;
+  }
+
+  return `A ${figure.color} ${figure.shape} - ${roundedArea}`;
 }
